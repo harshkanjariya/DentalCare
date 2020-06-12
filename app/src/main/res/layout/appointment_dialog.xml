@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+    <TableRow>
+        <TextView android:text="Patient"
+            android:paddingRight="10dp"/>
+        <TextView android:id="@+id/patient"
+            android:textColor="@android:color/black"/>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Doctor"/>
+        <TextView android:id="@+id/doctor"
+            android:textColor="@android:color/black"/>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Chair"/>
+        <TextView android:id="@+id/chair"
+            android:textColor="@android:color/black"/>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Date"/>
+        <TextView android:id="@+id/date"
+            android:textColor="@android:color/black"/>
+    </TableRow>
+    <TableRow>
+        <TextView android:text="Time"/>
+        <TextView android:id="@+id/time"
+            android:textColor="@android:color/black"/>
+    </TableRow>
+</TableLayout>

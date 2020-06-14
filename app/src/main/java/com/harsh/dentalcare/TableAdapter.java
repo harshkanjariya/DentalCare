@@ -38,7 +38,7 @@ public class TableAdapter{
     Map<String,?> rowData(int position) {
         return data.get(position);
     }
-    private void reload(){
+    void reload(){
         table.removeAllViews();
         TableRow row=new TableRow(ctx);
         for(Pair<String,String> s:heads){
@@ -47,7 +47,6 @@ public class TableAdapter{
             row.addView(txt);
         }
         table.addView(row);
-        Log.e("data",data.toString());
         for (int i=0;i<data.size();i++){
             row=new TableRow(ctx);
             for(Pair<String,String> s:heads){

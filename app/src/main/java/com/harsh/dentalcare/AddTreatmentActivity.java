@@ -243,7 +243,7 @@ public class AddTreatmentActivity extends AppCompatActivity {
             row.addView(txt);
             edt=new EditText(this);
             edt.setText(t.disgnosis);
-            edt.addTextChangedListener(new EditConnect(t,"disgnosis"));
+            edt.addTextChangedListener(new EditConnect(t,"diagnosis"));
             edt.setImeOptions(EditorInfo.IME_ACTION_NEXT);
             edt.setInputType(InputType.TYPE_CLASS_TEXT);
             params=new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);

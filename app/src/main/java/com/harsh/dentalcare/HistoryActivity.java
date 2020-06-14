@@ -2,9 +2,12 @@ package com.harsh.dentalcare;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
+import androidx.core.util.Pair;
 
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +20,16 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class HistoryActivity extends AppCompatActivity {
     AppCompatAutoCompleteTextView patientName;
     ArrayList<Patient> patients;
     Patient selectedPatient;
     TableLayout historyTable;
+    List<Map<String,Object>> treatments;
+    List<Map<String,Object>> filtered=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +40,18 @@ public class HistoryActivity extends AppCompatActivity {
 
         DBHelper db=new DBHelper(this);
         patients=db.getPatients();
-        ArrayList<HashMap<String,Object>>treatments=db.getTreatment();
+        final List<Map<String,Object>> treatments=db.getTreatment();
+        ArrayList<Pair<String,String>>titles=new ArrayList<>();
+        Log.e("data",treatments.toString());
+        titles.add(new Pair<>("Date","date"));
+        titles.add(new Pair<>("Patient","pnm"));
+        titles.add(new Pair<>("Doctor","dnm"));
+        titles.add(new Pair<>("Tooth","tooth"));
+        titles.add(new Pair<>("Diagnosis","diagnosis"));
+        titles.add(new Pair<>("Treatment Plan","tplan"));
+        titles.add(new Pair<>("Work done","workdone"));
+        titles.add(new Pair<>("Advise","advise"));
+        final TableAdapter adapter=new TableAdapter(this,titles,filtered,historyTable,R.layout.table_head_cell,R.layout.table_cell);
 
         SharedPreferences preferences=getSharedPreferences("myprefs",MODE_PRIVATE);
         long pat=preferences.getLong("pat",-1);
@@ -44,6 +62,12 @@ public class HistoryActivity extends AppCompatActivity {
                     patientName.setText(d.name);
                     break;
                 }
+            if (selectedPatient!=null)
+            for (Map<String,Object>m:treatments)
+                if (m.get("pnm").equals(selectedPatient.name)) {
+                    filtered.add(m);
+                }
+            adapter.reload();
         }
         final SuggestionAdapter<Patient> patAdapter=new SuggestionAdapter<>(patients);
         patientName.setAdapter(patAdapter);
@@ -54,6 +78,12 @@ public class HistoryActivity extends AppCompatActivity {
                 selectedPatient=patAdapter.list.get(position);
                 SharedPreferences preferences=getSharedPreferences("myprefs",MODE_PRIVATE);
                 preferences.edit().putLong("pat",selectedPatient.reg).apply();
+                filtered.clear();
+                for (Map<String,Object>m:treatments)
+                    if (m.get("pnm").equals(selectedPatient.name)){
+                        filtered.add(m);
+                    }
+                adapter.reload();
             }
         });
     }

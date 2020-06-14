@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -195,11 +194,11 @@ public class DBHelper extends SQLiteOpenHelper {
         for (Treatment t:data)
             db.execSQL("insert into treatment values("+t.reciept+","+pid+","+did+","+date+","+t.tooth+",'"+t.disgnosis+"','"+t.advise+"','"+t.tplan+"','"+t.workdone+"','"+t.estimate+"','"+t.recieved+"')");
     }
-    ArrayList<HashMap<String,Object>> getTreatment(){
-        ArrayList<HashMap<String,Object>>list=new ArrayList<>();
+    List<Map<String,Object>> getTreatment(){
+        List<Map<String,Object>>list=new ArrayList<>();
         SQLiteDatabase db=getWritableDatabase();
         db.execSQL("create table if not exists treatment(reciept integer primary key,preg integer,dreg integer,date integer,tooth tinyint,diagnosis text,advise text,tplan text,workdone text,estimate text,received text)");
-        Cursor cursor=db.rawQuery("select treatment.*,patient.name as pname,doctor.name as dname from (treatment left join patient on treatment.preg=patient.reg) left join doctor on treatment.dreg=doctor.reg",null);
+        Cursor cursor=db.rawQuery("select treatment.*,patient.name as pname,doctor.name as dname from treatment left join patient on treatment.preg=patient.reg left join doctor on treatment.dreg=doctor.reg",null);
         int reciept=cursor.getColumnIndex("reciept");
         int preg=cursor.getColumnIndex("preg");
         int dreg=cursor.getColumnIndex("dreg");

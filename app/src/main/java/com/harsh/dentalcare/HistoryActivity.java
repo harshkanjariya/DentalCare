@@ -12,23 +12,28 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HistoryActivity extends AppCompatActivity {
     AppCompatAutoCompleteTextView patientName;
     ArrayList<Patient> patients;
     Patient selectedPatient;
+    TableLayout historyTable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
         patientName=findViewById(R.id.patient_name);
+        historyTable=findViewById(R.id.treatment_history_table);
 
         DBHelper db=new DBHelper(this);
         patients=db.getPatients();
+        ArrayList<HashMap<String,Object>>treatments=db.getTreatment();
 
         SharedPreferences preferences=getSharedPreferences("myprefs",MODE_PRIVATE);
         long pat=preferences.getLong("pat",-1);

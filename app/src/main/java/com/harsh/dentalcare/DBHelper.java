@@ -72,6 +72,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 aps.add(ro);
                 cursor.moveToNext();
             }
+        cursor.close();
         return aps;
     }
     HashMap<Integer, String> getChairs(){
@@ -110,6 +111,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.moveToNext();
             }
         }
+        cursor.close();
         return regs;
     }
     ArrayList<Patient> getPatients(){
@@ -139,6 +141,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.moveToNext();
             }
         }
+        cursor.close();
         return list;
     }
     void addDoctor(long reg,String name,String gndr,String age,String mob,String em,String addr){
@@ -155,6 +158,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.moveToNext();
             }
         }
+        cursor.close();
         return regs;
     }
     ArrayList<Doctor> getDoctors(){
@@ -182,12 +186,55 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.moveToNext();
             }
         }
+        cursor.close();
         return list;
     }
+
     void addTreatment(long pid,long did,long date,ArrayList<Treatment>data){
         SQLiteDatabase db=getWritableDatabase();
         for (Treatment t:data)
             db.execSQL("insert into treatment values("+t.reciept+","+pid+","+did+","+date+","+t.tooth+",'"+t.disgnosis+"','"+t.advise+"','"+t.tplan+"','"+t.workdone+"','"+t.estimate+"','"+t.recieved+"')");
+    }
+    ArrayList<HashMap<String,Object>> getTreatment(){
+        ArrayList<HashMap<String,Object>>list=new ArrayList<>();
+        SQLiteDatabase db=getWritableDatabase();
+        db.execSQL("create table if not exists treatment(reciept integer primary key,preg integer,dreg integer,date integer,tooth tinyint,diagnosis text,advise text,tplan text,workdone text,estimate text,received text)");
+        Cursor cursor=db.rawQuery("select treatment.*,patient.name as pname,doctor.name as dname from (treatment left join patient on treatment.preg=patient.reg) left join doctor on treatment.dreg=doctor.reg",null);
+        int reciept=cursor.getColumnIndex("reciept");
+        int preg=cursor.getColumnIndex("preg");
+        int dreg=cursor.getColumnIndex("dreg");
+        int date=cursor.getColumnIndex("date");
+        int tooth=cursor.getColumnIndex("tooth");
+        int diagnosis=cursor.getColumnIndex("diagnosis");
+        int advise=cursor.getColumnIndex("advise");
+        int tplan=cursor.getColumnIndex("tplan");
+        int workdone=cursor.getColumnIndex("workdone");
+        int estimate=cursor.getColumnIndex("estimate");
+        int received=cursor.getColumnIndex("received");
+        int pnm=cursor.getColumnIndex("pname");
+        int dnm=cursor.getColumnIndex("dname");
+        if (cursor.moveToFirst()){
+            while (!cursor.isAfterLast()){
+                HashMap<String,Object>row=new HashMap<>();
+                row.put("reciept",cursor.getLong(reciept));
+                row.put("preg",cursor.getLong(preg));
+                row.put("dreg",cursor.getLong(dreg));
+                row.put("pnm",cursor.getString(pnm));
+                row.put("dnm",cursor.getString(dnm));
+                row.put("tooth",cursor.getInt(tooth));
+                row.put("date",cursor.getLong(date));
+                row.put("diagnosis",cursor.getString(diagnosis));
+                row.put("workdone",cursor.getString(workdone));
+                row.put("tplan",cursor.getString(tplan));
+                row.put("advise",cursor.getString(advise));
+                row.put("estimate",Float.parseFloat(cursor.getString(estimate)));
+                row.put("received",Float.parseFloat(cursor.getString(received)));
+                list.add(row);
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        return list;
     }
     ArrayList<Long> getReciepts() {
         ArrayList<Long>rec=new ArrayList<>();
@@ -201,6 +248,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.moveToNext();
             }
         }
+        cursor.close();
         cursor=db.rawQuery("select reciept from payment",null);
         if (cursor.moveToFirst()){
             while(!cursor.isAfterLast()){
@@ -208,6 +256,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.moveToNext();
             }
         }
+        cursor.close();
         return rec;
     }
 }

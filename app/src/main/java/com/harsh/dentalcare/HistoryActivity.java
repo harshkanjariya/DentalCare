@@ -116,7 +116,7 @@ public class HistoryActivity extends AppCompatActivity {
                     ArrayList<T>temp=new ArrayList<>();
                     if (constraint==null){
                         temp=new ArrayList<>(originalList);
-                    }else {
+                    }else { 
                         for (T t : originalList)
                             if (t.name.startsWith(constraint.toString()))
                                 temp.add(t);
